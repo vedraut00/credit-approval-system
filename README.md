@@ -49,6 +49,7 @@ docker compose exec web python manage.py migrate
 # Copy data files to container
 docker cp customer_data.xlsx credit_approval_system-web-1:/app/
 docker cp loan_data.xlsx credit_approval_system-web-1:/app/
+
 # Ingest data
 docker compose exec web python manage.py ingest_data
 ```

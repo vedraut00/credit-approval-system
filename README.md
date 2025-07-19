@@ -47,9 +47,8 @@ docker compose exec web python manage.py migrate
 ### 4. Ingest Sample Data (Optional)
 ```bash
 # Copy data files to container
-docker cp customer_data.xlsx $(docker-compose ps -q web):/app/
-docker cp loan_data.xlsx $(docker-compose ps -q web):/app/
-
+docker cp customer_data.xlsx credit_approval_system-web-1:/app/
+docker cp loan_data.xlsx credit_approval_system-web-1:/app/
 # Ingest data
 docker compose exec web python manage.py ingest_data
 ```
@@ -61,53 +60,106 @@ docker compose exec web python manage.py ingest_data
 ## 📚 API Endpoints
 
 ### 1. Customer Registration
-```bash
-POST /loans/register/
-Content-Type: application/json
 
-{
+**Linux/Mac (curl):**
+```bash
+curl -X POST http://localhost:8000/loans/register/ \
+  -H "Content-Type: application/json" \
+  -d '{
     "first_name": "John",
     "last_name": "Doe",
     "age": 30,
     "monthly_income": 50000,
     "phone_number": "9876543210"
-}
+  }'
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/loans/register/" -Method POST -ContentType "application/json" -Body '{"first_name": "John", "last_name": "Doe", "age": 30, "monthly_income": 50000, "phone_number": "9876543210"}'
 ```
 
 ### 2. Loan Eligibility Check
-```bash
-POST /loans/check-eligibility/
-Content-Type: application/json
 
-{
+**Linux/Mac (curl):**
+```bash
+curl -X POST http://localhost:8000/loans/check-eligibility/ \
+  -H "Content-Type: application/json" \
+  -d '{
     "customer_id": 1,
     "loan_amount": 200000,
     "interest_rate": 12.0,
     "tenure": 12
-}
+  }'
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/loans/check-eligibility/" -Method POST -ContentType "application/json" -Body '{"customer_id": 1, "loan_amount": 200000, "interest_rate": 12.0, "tenure": 12}'
 ```
 
 ### 3. Loan Creation
-```bash
-POST /loans/create-loan/
-Content-Type: application/json
 
-{
+**Linux/Mac (curl):**
+```bash
+curl -X POST http://localhost:8000/loans/create-loan/ \
+  -H "Content-Type: application/json" \
+  -d '{
     "customer_id": 1,
     "loan_amount": 200000,
     "interest_rate": 12.0,
     "tenure": 12
-}
+  }'
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/loans/create-loan/" -Method POST -ContentType "application/json" -Body '{"customer_id": 1, "loan_amount": 200000, "interest_rate": 12.0, "tenure": 12}'
 ```
 
 ### 4. View Loan Details
+
+**Linux/Mac (curl):**
 ```bash
-GET /loans/view-loan/{loan_id}/
+curl http://localhost:8000/loans/view-loan/1/
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/loans/view-loan/1/" -Method GET
 ```
 
 ### 5. View Customer Loans
+
+**Linux/Mac (curl):**
 ```bash
-GET /loans/view-loans/{customer_id}/
+curl http://localhost:8000/loans/view-loans/1/
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-RestMethod -Uri "http://localhost:8000/loans/view-loans/1/" -Method GET
+```
+
+### 📋 Quick Test Commands (Windows)
+
+**Copy-paste these commands to test all endpoints:**
+
+```powershell
+# 1. Register a new customer
+Invoke-RestMethod -Uri "http://localhost:8000/loans/register/" -Method POST -ContentType "application/json" -Body '{"first_name": "John", "last_name": "Doe", "age": 30, "monthly_income": 50000, "phone_number": "9876543210"}'
+
+# 2. Check loan eligibility
+Invoke-RestMethod -Uri "http://localhost:8000/loans/check-eligibility/" -Method POST -ContentType "application/json" -Body '{"customer_id": 1, "loan_amount": 200000, "interest_rate": 12.0, "tenure": 12}'
+
+# 3. Create a loan
+Invoke-RestMethod -Uri "http://localhost:8000/loans/create-loan/" -Method POST -ContentType "application/json" -Body '{"customer_id": 1, "loan_amount": 200000, "interest_rate": 12.0, "tenure": 12}'
+
+# 4. View loan details
+Invoke-RestMethod -Uri "http://localhost:8000/loans/view-loan/1/" -Method GET
+
+# 5. View customer loans
+Invoke-RestMethod -Uri "http://localhost:8000/loans/view-loans/1/" -Method GET
 ```
 
 ## 🧪 Testing
